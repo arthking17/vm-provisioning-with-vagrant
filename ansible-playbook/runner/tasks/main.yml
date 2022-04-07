@@ -1,0 +1,49 @@
+---
+# tasks file for runner
+- name: install ansible
+  shell: "{{ item }}"
+  with_items:
+  - sudo nala install ansible -y
+
+- name: install gitlab-runner
+  shell: "{{ item }}"
+  with_items:
+  - curl -LJO "https://gitlab-runner-downloads.s3.amazonaws.com/latest/deb/gitlab-runner_{{ arch }}.deb"
+  - dpkg -i gitlab-runner_{{ arch }}.deb
+  - gitlab-runner --version
+  
+- name: remove old gitlab-runner
+  command: rm /etc/gitlab-runner/config.toml
+  ignore_errors: yes
+
+- name: register a docker in docker runner
+  shell: | 
+    sudo gitlab-runner register -n \
+      --url https://gitlab.com/ \
+      --registration-token {{ RUNNER_TOKEN }} \
+      --executor docker \
+      --description "docker runner" \
+      --docker-image "docker:dind" \
+      --docker-privileged \
+      --tag-list docker
+
+- name: register a new shell runner
+  shell: | 
+    sudo gitlab-runner register -n \
+      --url https://gitlab.com/ \
+      --registration-token {{ RUNNER_TOKEN }} \
+      --executor shell \
+      --shell bash \
+      --description "shell runner" \
+      --tag-list shell
+
+- name: register a new maven docker runner
+  shell: | 
+    sudo gitlab-runner register -n \
+      --url https://gitlab.com/ \
+      --registration-token {{ RUNNER_TOKEN }} \
+      --executor docker \
+      --description "docker runner" \
+      --docker-image "maven:3.3-jdk-8" \
+      --docker-privileged \
+      --tag-list docker-maven

@@ -1,0 +1,15 @@
+[master]
+192.168.136.129 ansible_ssh_user=kube-02
+
+[node]
+192.168.136.128 ansible_ssh_user=kube-03
+192.168.136.139 ansible_ssh_user=kube-04
+
+
+[cluster]
+192.168.136.128 ansible_ssh_user=kube-03
+192.168.136.129 ansible_ssh_user=kube-02
+192.168.136.139 ansible_ssh_user=kube-04
+
+[runner]
+192.168.1.21 ansible_ssh_user=wi11i4m

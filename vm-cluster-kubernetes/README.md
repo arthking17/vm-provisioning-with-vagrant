@@ -1,0 +1,9 @@
+# VM PROVISIONING WITH VAGRANT
+
+## Get started with vagrant
+
+* ***vagrant up*** cmd
+    > *run the vagantfile create above to deploy and start a cluster of VM*
+```
+vagrant up
+```

@@ -1,0 +1,24 @@
+---
+# tasks file for azure
+- name: install azure-cli
+  shell: "{{ item }}"
+  with_items:
+  - curl -sL https://packages.microsoft.com/keys/microsoft.asc |
+    gpg --dearmor |
+    sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
+  - AZ_REPO=$(lsb_release -cs)
+  - echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" |
+    sudo tee /etc/apt/sources.list.d/azure-cli.list
+  - sudo apt-get update
+  - sudo apt-get install azure-cli -y
+
+- name: copy automation code for vm provisionning
+  copy:
+    src: automate-vm-deployment/
+    dest: /automate-vm-deployment/
+
+- name: login in azure-cli
+  command: az login -u {{ AZURE_USERNAME }} -p {{ AZURE_PASSWORD }} --tenant {{ AZURE_TENANT }} --allow-no-subscriptions
+
+- name: create vm host
+  shell: chdir /automate-vm-deployment/ sh script.sh

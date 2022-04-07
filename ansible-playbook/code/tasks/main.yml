@@ -1,0 +1,4 @@
+---
+# tasks file for code
+- name: install vs code
+  command: sudo snap install --classic code

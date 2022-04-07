@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+BRIDGE_NETWORK = "Realtek RTL8852AE WiFi 6 802.11ax PCIe Adapter"
+
+### Master (SysAdmin Machine)
+DEVOPS_RAM = 4096
+DEVOPS_CPU = 4
+DEVOPS_PRIVATE_IP = "192.168.130.169"
+DEVOPS_PUBLIC_IP = "192.168.1.169"
+
+Vagrant.configure("2") do |config|
+  config.vm.provision "shell", inline: "echo Hello"
+
+  config.vm.define "devops" do |devops|
+    devops.vm.box = "peru/ubuntu-20.04-desktop-amd64"
+    devops.vm.provider "virtualbox" do |v|
+      v.name = "devops"
+      v.memory = DEVOPS_RAM
+      v.cpus = DEVOPS_CPU
+    end
+    devops.vm.network "public_network", bridge: BRIDGE_NETWORK, ip: DEVOPS_PUBLIC_IP
+    devops.vm.network "private_network", ip: DEVOPS_PRIVATE_IP
+  end
+
+end

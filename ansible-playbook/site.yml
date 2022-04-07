@@ -1,0 +1,34 @@
+---
+- name: Install and configure Ansible Host
+  hosts: runner
+  gather_facts: yes
+  become: yes
+  
+  roles:
+  - common
+  - code
+  - docker
+  - kubernetes
+  - azure
+
+
+- name: Install and configure Kubernetes Master Node
+  hosts: master
+  gather_facts: yes
+  become: yes
+  
+  roles:
+  - common
+  - docker
+  - kubernetes
+
+
+- name: Install and configure Kubernetes Workers Node
+  hosts: node
+  gather_facts: yes
+  become: yes
+  
+  roles:
+  - common
+  - docker
+  - kubernetes

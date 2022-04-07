@@ -1,0 +1,33 @@
+---
+# tasks file for common
+
+- name: download package information from all configured sources
+  command: apt-get update
+  become: yes
+  ignore_errors: true
+
+- name: install nala
+  shell: "{{ item }}"
+  with_items:
+  - echo "deb [arch=amd64,arm64,armhf] http://deb.volian.org/volian/ scar main" | sudo tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list
+  - wget -qO - https://deb.volian.org/volian/scar.key | sudo tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null
+  - sudo apt-get update
+  - sudo apt-get install nala -y
+  ignore_errors: true
+
+
+- name: install snap
+  shell: "{{ item }}"
+  with_items:
+  - sudo apt install snapd -y
+
+- name: install packages needed to manage  apt repository
+  command: |
+    sudo apt-get install -y \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release \
+    apt-transport-https
+  ignore_errors: true
+  become: yes
